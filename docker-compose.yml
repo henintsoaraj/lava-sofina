@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  icecast:
+    build: ./icecast
+    ports:
+      - "8000:8000"
+    
+  liquidsoap:
+    image: pltnk/liquidsoap
+    volumes:
+      - ./liquidsoap/music:/music
+      - ./liquidsoap/script.liq:/etc/liquidsoap/script.liq
+    depends_on:
+      - icecast
