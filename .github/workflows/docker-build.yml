@@ -49,4 +49,4 @@ jobs:
         run: sleep 10
 
       - name: Check that the stream responds
-        run: curl -I -f --connect-timeout 20 http://localhost:8000/radio.mp3
+        run: curl -f --max-time 10 http://localhost:8000/radio.mp3
