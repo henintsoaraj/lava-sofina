@@ -50,7 +50,7 @@ jobs:
 
       - name: Check that the stream responds
         run: |
-             curl --max-time 2 http://localhost:8000/radio.mp3
+             curl --max-time 2 -o /dev/null http://localhost:8000/radio.mp3
              exit_code=$?
              if [ "$exit_code" = "0" ] || [ "$exit_code" = "28" ]; then
                echo "Le flux est OK (code $exit_code)"
