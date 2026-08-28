@@ -32,3 +32,21 @@ jobs:
           context: icecast/
           push: true
           tags: ghcr.io/${{ github.repository }}:${{ github.sha }}
+  
+  integration-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+      
+      - name: Generate icecast.xml from secret
+        run: sed 's/xxxxxx/${{ secrets.ICECAST_SOURCE_PASSWORD }}/' icecast/icecast.xml.example > icecast/icecast.xml
+
+      - name: Start services
+        run: docker compose up -d
+
+      - name: Wait for services to connect
+        run: sleep 10
+
+      - name: Check that the stream responds
+        run: curl -I -f --connect-timeout 20 http://localhost:8000/radio.mp3
