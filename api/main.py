@@ -13,8 +13,8 @@ def now_playing():
     data = response.json()
 
     source = data["icestats"]["source"]
-    title = source["title"]
-    listener = source["listeners"]
+    title = source.get("title", "Aucun titre")
+    listener = source.get("listeners", 0)
     return {
         "title": title,
         "listener": listener
