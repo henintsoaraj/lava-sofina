@@ -44,6 +44,8 @@ jobs:
 
       - name: Start services
         run: docker compose up -d
+        env:
+          ICECAST_SOURCE_PASSWORD: ${{ secrets.ICECAST_SOURCE_PASSWORD }}
 
       - name: Wait for services to connect
         run: sleep 60

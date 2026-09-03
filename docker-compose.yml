@@ -13,6 +13,8 @@ services:
       - ./liquidsoap/script.liq:/etc/liquidsoap/script.liq
     depends_on:
       - icecast
+    environment:
+      - ICECAST_SOURCE_PASSWORD=${ICECAST_SOURCE_PASSWORD}
 
   api:
     build: ./api
