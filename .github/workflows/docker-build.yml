@@ -63,8 +63,13 @@ jobs:
                exit 1
              fi
 
+      - name: Show Liquidsoap logs on failure
+        if: failure()
+        run: docker compose logs liquidsoap
+
       - name: check that API responds
         run: curl -f http://localhost:8001/now-playing
+
       - name: Show API logs on failure
         if: failure()
         run: docker compose logs api 
