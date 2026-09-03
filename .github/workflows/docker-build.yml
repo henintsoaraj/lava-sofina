@@ -60,3 +60,24 @@ jobs:
                echo "Le flux est KO (code $exit_code)"
                exit 1
              fi
+
+  build-api:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push API image
+        uses: docker/build-push-action@v5
+        with:
+          context: api/
+          push: true
+          tags: ghcr.io/${{ github.repository }}-api:${{ github.sha }}
