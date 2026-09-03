@@ -13,3 +13,12 @@ services:
       - ./liquidsoap/script.liq:/etc/liquidsoap/script.liq
     depends_on:
       - icecast
+
+  api:
+    build: ./api
+    ports:
+      - "8001:8000"
+    environment:
+      - ICECAST_URL=http://icecast:8000
+    depends_on:
+      - icecast
