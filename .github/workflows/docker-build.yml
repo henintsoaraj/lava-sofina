@@ -62,7 +62,10 @@ jobs:
              fi
 
       - name: check that API responds
-        run: curl -f http://localhost:8001/now-playing 
+        run: curl -f http://localhost:8001/now-playing
+      - name: Show API logs on failure
+        if: failure()
+        run: docker compose logs api 
 
   build-api:
     runs-on: ubuntu-latest
