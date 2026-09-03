@@ -46,7 +46,7 @@ jobs:
         run: docker compose up -d
 
       - name: Wait for services to connect
-        run: sleep 10
+        run: sleep 60
 
       - name: Check that the stream responds
         run: |
