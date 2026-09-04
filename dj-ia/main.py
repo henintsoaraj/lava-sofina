@@ -32,7 +32,7 @@ def send_to_liquidsoap(dj_audio):
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     client_socket.connect((LIQUIDSOAP, 1234))
-    audio = "dj.push.uri "+dj_audio+"\n"
+    audio = "dj.push "+dj_audio+"\n"
     client_socket.send(audio.encode())
     response = client_socket.recv(1024).decode()
 
