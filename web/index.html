@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Ma Radio - Now Playing</title>
+</head>
+<body>
+  <h1>En ce moment sur la radio</h1>
+  <p id="titre">Chargement...</p>
+  <p id="auditeurs">Chargement...</p>
+
+  <script>
+  async function updateNowPlaying() {
+    const response = await fetch("http://127.0.0.1:43097/now-playing");
+    const data = await response.json();
+    document.getElementById("titre").textContent = data.title;
+    document.getElementById("auditeurs").textContent = data.listener;
+  }
+
+  updateNowPlaying();
+  
+  setInterval(() => {
+  updateNowPlaying()
+}, 10000); // 10 secondes
+</script>
+</body>
+</html>
+
