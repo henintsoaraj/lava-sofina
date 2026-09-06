@@ -348,7 +348,7 @@
 <mount type="normal">
 	<mount-name>/radio.mp3</mount-name>
 	<username>source</username>
-	<password>hackme</password>
+	<password>xxxxxxx</password>
 	<public>1</public>
 </mount>
 </icecast>
