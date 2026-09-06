@@ -11,7 +11,7 @@
 
   <script>
   async function updateNowPlaying() {
-    const response = await fetch("http://88.96.62.56:30801/now-playing");
+    const response = await fetch("https://tsoum-radio.duckdns.org/now-playing");
     const data = await response.json();
     document.getElementById("titre").textContent = data.title;
     document.getElementById("auditeurs").textContent = data.listener;
