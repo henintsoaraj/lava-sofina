@@ -40,9 +40,9 @@
 
     <authentication>
         <!-- Sources log in with username 'source' -->
-        <source-password>xxxxxxxxx</source-password>
+        <source-password>xxxxxx</source-password>
         <!-- Relays log in with username 'relay' -->
-        <relay-password>xxxxxxxxxxx</relay-password>
+        <relay-password>xxxxxx</relay-password>
 
         <!-- Admin logs in with the username given below -->
         <admin-user>admin</admin-user>

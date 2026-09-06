@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: icecast
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: icecast
+  template:
+    metadata:
+      labels:
+        app: icecast
+    spec:
+      containers:
+        - name: icecast
+          image: ghcr.io/henintsoaraj/lava-sofina:14dfcc1222e2880a9df4285e8ac02dd8a06bc151
+          ports:
+            - containerPort: 8000

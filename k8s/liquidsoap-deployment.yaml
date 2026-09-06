@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: liquidsoap
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: liquidsoap
+  template:
+    metadata:
+      labels:
+        app: liquidsoap
+    spec:
+      containers:
+        - name: liquidsoap
+          image: ghcr.io/henintsoaraj/lava-sofina-liquidsoap:6b105c7ac81b81aae5b045cd3483b9127fb9a671
+          volumeMounts:
+            - name: script-volume
+              mountPath: /tmp/script.liq
+              subPath: script.liq
+
+            - name: music-volume
+              mountPath: /tmp/music
+
+            - name: dj-audio-storage
+              mountPath: /tmp/dj-audio
+
+          env:
+            - name: ICECAST_SOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: icecast-password
+                  key: ICECAST_SOURCE_PASSWORD
+
+      volumes:
+        - name: script-volume
+          configMap:
+            name: liquidsoap-script
+
+        - name: music-volume
+          persistentVolumeClaim:
+            claimName: music-storage
+
+        - name: dj-audio-storage
+          persistentVolumeClaim:
+            claimName: dj-audio-storage

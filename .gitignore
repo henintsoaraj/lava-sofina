@@ -1,2 +1,7 @@
 icecast.xml
 music/
+k8s/cluster-issuer-staging.yaml
+k8s/cluster-issuer-prod.yaml
+dj-ia/test-output/
+venv/
+__pycache__/

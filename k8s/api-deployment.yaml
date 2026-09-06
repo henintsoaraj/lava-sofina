@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+        - name: api
+          image: ghcr.io/henintsoaraj/lava-sofina-api:14dfcc1222e2880a9df4285e8ac02dd8a06bc151
+          ports:
+            - containerPort: 8000
+          env:
+            - name: ICECAST_URL
+              value: "http://icecast:8000"
+

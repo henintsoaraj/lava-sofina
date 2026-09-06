@@ -1,0 +1,34 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web-ingress
+spec:
+  tls:
+    - hosts:
+        - tsoum-radio.duckdns.org
+      secretName: web-tls-prod
+  rules:
+    - host: tsoum-radio.duckdns.org
+      http:
+        paths:
+          - path: /now-playing
+            pathType: Prefix
+            backend:
+              service:
+                name: api
+                port:
+                  number: 8000
+          - path: /radio.mp3
+            pathType: Prefix
+            backend:
+              service:
+                name: icecast
+                port:
+                  number: 8000
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: web
+                port:
+                  number: 80
