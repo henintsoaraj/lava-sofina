@@ -2,7 +2,7 @@
 
 Une radio en streaming complète, construite de zéro comme projet d'apprentissage DevOps : diffusion audio en direct, un DJ animé par IA qui intervient avec la météo réelle, une API "now playing", et une interface web — le tout conteneurisé, orchestré par Kubernetes, et déployé en HTTPS sur un vrai serveur cloud.
 
-**🔴 Écouter en direct :** [https://tsoum-radio.duckdns.org](https://tsoum-radio.duckdns.org)
+**🔴 Écouter en direct :** [https://tsoum-radio.duckdns.org](https://tsoum-radio.duckdns.org/radio.mp3)
 
 ---
 
