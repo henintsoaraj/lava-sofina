@@ -1,28 +1,269 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Ma Radio - Now Playing</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tsoum Radio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Bricolage+Grotesque:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #10121a;
+    --panel: #191d2b;
+    --panel-edge: #232840;
+    --amber: #ffb454;
+    --amber-dim: #7a5a2c;
+    --live: #57e3c4;
+    --text: #eef0f7;
+    --muted: #8891a8;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:32px 16px;
+    background:
+      radial-gradient(ellipse at 50% -10%, #1c2140 0%, var(--bg) 55%);
+    font-family:'Bricolage Grotesque', sans-serif;
+    color:var(--text);
+  }
+
+  .radio{
+    width:100%;
+    max-width:460px;
+    background:linear-gradient(180deg, var(--panel) 0%, #141726 100%);
+    border:1px solid var(--panel-edge);
+    border-radius:22px;
+    padding:28px 26px 24px;
+    box-shadow:
+      0 40px 80px -30px rgba(0,0,0,.7),
+      inset 0 1px 0 rgba(255,255,255,.04);
+  }
+
+  .top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:22px;
+  }
+  .station{
+    font-weight:800;
+    font-size:20px;
+    letter-spacing:-0.01em;
+  }
+  .live{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--live);
+  }
+  .live-dot{
+    width:7px;height:7px;border-radius:50%;
+    background:var(--live);
+    box-shadow:0 0 0 0 rgba(87,227,196,.6);
+    animation:pulse 1.8s infinite;
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(87,227,196,.55);}
+    70%{box-shadow:0 0 0 8px rgba(87,227,196,0);}
+    100%{box-shadow:0 0 0 0 rgba(87,227,196,0);}
+  }
+
+  .display{
+    background:#0b0d15;
+    border:1px solid #262b42;
+    border-radius:14px;
+    padding:18px 18px 16px;
+    margin-bottom:18px;
+    position:relative;
+    overflow:hidden;
+  }
+  .display::before{
+    content:"";
+    position:absolute; inset:0;
+    background:repeating-linear-gradient(
+      0deg, rgba(255,255,255,.015) 0px, rgba(255,255,255,.015) 1px,
+      transparent 1px, transparent 3px
+    );
+    pointer-events:none;
+  }
+  .eq-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:.08em;
+    color:var(--muted);
+    margin-bottom:8px;
+  }
+  .track{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:15px;
+    font-weight:500;
+    color:var(--amber);
+    text-shadow:0 0 14px rgba(255,180,84,.35);
+    min-height:22px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+
+  .eq{
+    display:flex;
+    align-items:flex-end;
+    gap:3px;
+    height:26px;
+    margin-top:14px;
+  }
+  .eq span{
+    flex:1;
+    background:linear-gradient(180deg, var(--amber), var(--amber-dim));
+    border-radius:2px;
+    height:20%;
+    opacity:.35;
+    transition:opacity .3s;
+  }
+  .radio.playing .eq span{
+    opacity:1;
+    animation:bounce 900ms ease-in-out infinite;
+  }
+  .radio.playing .eq span:nth-child(1){animation-delay:-0.6s;}
+  .radio.playing .eq span:nth-child(2){animation-delay:-0.2s;}
+  .radio.playing .eq span:nth-child(3){animation-delay:-0.8s;}
+  .radio.playing .eq span:nth-child(4){animation-delay:-0.1s;}
+  .radio.playing .eq span:nth-child(5){animation-delay:-0.5s;}
+  .radio.playing .eq span:nth-child(6){animation-delay:-0.3s;}
+  .radio.playing .eq span:nth-child(7){animation-delay:-0.7s;}
+  .radio.playing .eq span:nth-child(8){animation-delay:-0.15s;}
+  @keyframes bounce{
+    0%,100%{height:15%;}
+    50%{height:100%;}
+  }
+
+  .controls{
+    display:flex;
+    align-items:center;
+    gap:16px;
+  }
+  .play-btn{
+    width:56px; height:56px;
+    border-radius:50%;
+    border:1px solid var(--panel-edge);
+    background:radial-gradient(circle at 35% 30%, #2a3050, #171a2a 70%);
+    color:var(--amber);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    flex-shrink:0;
+    transition:transform .15s ease, box-shadow .15s ease;
+    box-shadow:0 6px 18px -6px rgba(0,0,0,.6);
+  }
+  .play-btn:hover{ transform:translateY(-1px); }
+  .play-btn:active{ transform:translateY(0); }
+  .play-btn:focus-visible{ outline:2px solid var(--amber); outline-offset:3px; }
+  .play-btn svg{ width:20px; height:20px; }
+
+  .meta{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.6;
+  }
+  .meta b{ color:var(--text); font-weight:600; }
+
+  footer{
+    margin-top:20px;
+    text-align:center;
+    font-size:11px;
+    color:#4d5370;
+    font-family:'IBM Plex Mono', monospace;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .live-dot, .eq span{ animation:none !important; }
+  }
+</style>
 </head>
 <body>
-  <h1>En ce moment sur la radio</h1>
-  <p id="titre">Chargement...</p>
-  <p id="auditeurs">Chargement...</p>
 
-  <script>
+<div class="radio" id="radio">
+  <div class="top">
+    <div class="station">Tsoum Radio</div>
+    <div class="live"><span class="live-dot"></span>EN DIRECT</div>
+  </div>
+
+  <div class="display">
+    <div class="eq-label">EN CE MOMENT</div>
+    <div class="track" id="titre">connexion…</div>
+    <div class="eq" aria-hidden="true">
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="play-btn" id="playBtn" aria-label="Lancer la radio">
+      <svg id="iconPlay" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      <svg id="iconPause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+    </button>
+    <div class="meta">
+      <div><b id="auditeurs">–</b> auditeur(s) connecté(s)</div>
+      <div>flux mis à jour toutes les 10s</div>
+    </div>
+  </div>
+</div>
+
+<footer>construit avec Icecast · Liquidsoap · un DJ IA</footer>
+
+<audio id="player" preload="none">
+  <source src="/radio.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+  const player = document.getElementById('player');
+  const playBtn = document.getElementById('playBtn');
+  const iconPlay = document.getElementById('iconPlay');
+  const iconPause = document.getElementById('iconPause');
+  const radio = document.getElementById('radio');
+
+  playBtn.addEventListener('click', () => {
+    if (player.paused) {
+      player.play();
+    } else {
+      player.pause();
+    }
+  });
+
+  player.addEventListener('playing', () => {
+    iconPlay.style.display = 'none';
+    iconPause.style.display = '';
+    playBtn.setAttribute('aria-label', 'Mettre en pause');
+    radio.classList.add('playing');
+  });
+
+  player.addEventListener('pause', () => {
+    iconPlay.style.display = '';
+    iconPause.style.display = 'none';
+    playBtn.setAttribute('aria-label', 'Lancer la radio');
+    radio.classList.remove('playing');
+  });
+
   async function updateNowPlaying() {
-    const response = await fetch("https://tsoum-radio.duckdns.org/now-playing");
-    const data = await response.json();
-    document.getElementById("titre").textContent = data.title;
-    document.getElementById("auditeurs").textContent = data.listener;
+    try {
+      const response = await fetch("/now-playing");
+      const data = await response.json();
+      document.getElementById("titre").textContent = data.title || "Unknown";
+      document.getElementById("auditeurs").textContent = data.listener ?? "0";
+    } catch (e) {
+      document.getElementById("titre").textContent = "indisponible";
+    }
   }
 
   updateNowPlaying();
-  
-  setInterval(() => {
-  updateNowPlaying()
-}, 10000); // 10 secondes
+  setInterval(updateNowPlaying, 10000);
 </script>
+
 </body>
 </html>
-
