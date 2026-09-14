@@ -27,7 +27,7 @@ def now_playing():
     response = requests.get(stats_json)
     data = response.json()
 
-    source = data["icestats"]["source"]
+    source = data["icestats"].get("source", {})
     title = source.get("title", "Aucun titre")
     listener = source.get("listeners", 0)
     return {
