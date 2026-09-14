@@ -194,6 +194,19 @@
     <div class="live"><span class="live-dot"></span>EN DIRECT</div>
   </div>
 
+  <div class="radio" style="margin-top:20px;">
+  <div class="top">
+    <div class="station">Ajouter un morceau</div>
+  </div>
+
+  <form id="uploadForm">
+    <input type="file" id="fichier" accept=".mp3" required style="display:block; margin-bottom:10px; color:var(--text);">
+    <input type="password" id="motDePasse" placeholder="Mot de passe" required style="display:block; margin-bottom:10px; width:100%; padding:8px; border-radius:6px; border:1px solid var(--panel-edge); background:#0b0d15; color:var(--text);">
+    <button type="submit" style="width:100%; padding:10px; border-radius:8px; border:none; background:var(--amber); color:#10121a; font-weight:600; cursor:pointer;">Envoyer</button>
+  </form>
+  <p id="statutUpload" style="font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--muted); margin-top:10px;"></p>
+</div>
+
   <div class="display">
     <div class="eq-label">EN CE MOMENT</div>
     <div class="track" id="titre">connexion…</div>
@@ -263,6 +276,34 @@
 
   updateNowPlaying();
   setInterval(updateNowPlaying, 10000);
+
+  document.getElementById('uploadForm').addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  const formData = new FormData();
+  formData.append('file', document.getElementById('fichier').files[0]);
+  formData.append('password', document.getElementById('motDePasse').value);
+
+  const statut = document.getElementById('statutUpload');
+  statut.textContent = "Envoi en cours...";
+
+  try {
+    const response = await fetch('/upload/', {
+      method: 'POST',
+      body: formData
+    });
+    const resultat = await response.json();
+
+    if (response.ok) {
+      statut.textContent = "✅ " + resultat.message;
+      document.getElementById('uploadForm').reset();
+    } else {
+      statut.textContent = "❌ " + resultat.detail;
+    }
+  } catch (erreur) {
+    statut.textContent = "❌ Erreur réseau.";
+  }
+});
 </script>
 
 </body>
