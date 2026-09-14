@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException, status
+from fastapi import FastAPI, File, UploadFile, HTTPException, status, Form
 import requests
 import os
 from urllib.parse import urljoin
@@ -15,6 +15,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 ICECAST_URL = os.getenv("ICECAST_URL")
+UPLOAD_PASSWORD = os.getenv("UPLOAD_PASSWORD")
 stats_json = urljoin(ICECAST_URL, "/status-json.xsl")
 # Dossier où les fichiers importés seront enregistrés
 UPLOAD_DIR = Path("/music")
@@ -35,7 +36,12 @@ def now_playing():
     }
 
 @app.post("/upload/")
-async def importer_fichier(file: UploadFile = File(...)):
+async def importer_fichier(file: UploadFile = File(...), password: str = Form(...)):
+    if password != UPLOAD_PASSWORD:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Mot de passe incorrect."
+        )
     extension_valide = file.filename.lower().endswith(".mp3")
     mime_suspect = file.content_type in MIME_INTERDITS
 
